@@ -142,14 +142,6 @@ talk.Dispose();                            // カウント1（まだロック中
 pause.Dispose();                           // カウント0（解除）
 ```
 
-| 拡張メソッド | 対象 | 内容 |
-|---|---|---|
-| `PressedAsObservable()` | `InputButton` | 押下の通知 |
-| `ReleasedAsObservable()` | `InputButton` | 離しの通知 |
-| `HeldAsReactiveProperty()` | `InputButton` | 押している間 true |
-| `ChangedAsObservable()` | `InputVector2` | 値の変化の通知 |
-
-R3 が無い環境では、この拡張は自動でコンパイル対象から外れます。
 
 ## Project-wide Actions 以外のアセットを使う
 
