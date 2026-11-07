@@ -13,19 +13,19 @@ https://github.com/TomokiSatokawa/CoreKitLibrary.git?path=/Packages/com.t0m0.cor
 ## Features
 
 ### InputService
-InputSystemをInputManagerのように楽に使えます。
 
-[InputServiceの使い方](Documentation/Input/InputService.md)
+Input SystemをInputManagerのように扱いやすくする機能です。
 
+- [詳細・使い方を見る →](Documentation/Input/InputService.md)
 
 ### FloatRange
+
 float型の範囲値を扱う構造体です。範囲判定、値の制限、範囲内のランダム値取得に対応しています。
 
-[FloatRangeの使い方](Documentation/Common/FloatRange.md)
-
+- [詳細・使い方を見る →](Documentation/Common/FloatRange.md)
 
 ### FlagRegistry
+
 複数の要求元からのフラグ登録を管理するクラスです。トークンを使用して登録元ごとに状態を管理し、1つでも登録があればフラグを `true` にします。
 
-[FlagRegistryの使い方](Documentation/Flag/FlagRegistry.md)
-
+- [詳細・使い方を見る →](Documentation/Flag/FlagRegistry.md)
