@@ -4,7 +4,7 @@ Unity の Input System を、旧 `InputManager` のような感覚で使うた�
 
 - 文字列でアクション名を指定しない（補完が効く）
 - キーの追加は **Input Actions アセットを編集して保存するだけ**（コード変更なし）
-- `GetKey` / `GetKeyDown` / `GetKeyUp` が使える（R3 不要）
+- `Key` / `Down` / `Up` で押下状態を取得できる（R3 不要）
 - アクションマップ（Player / UI など）単位で入力をロックできる
 - R3 があればオプションで Observable として扱える
 
@@ -47,10 +47,10 @@ void Update()
     Vector2 move = InputService.Player.Move.Value;
     Vector2 look = InputService.Player.Look.Value;
 
-    // ボタンの取得（旧 InputManager 風）
-    if (InputService.Player.Jump.GetKeyDown()) Jump();
-    if (InputService.Player.Sprint.GetKey())   Sprint();
-    if (InputService.Player.Jump.GetKeyUp())   ReleaseJump();
+    // ボタンの取得（Key=押している間 / Down=押した瞬間 / Up=離した瞬間）
+    if (InputService.Player.Jump.Down)   Jump();
+    if (InputService.Player.Sprint.Key)  Sprint();
+    if (InputService.Player.Jump.Up)     ReleaseJump();
 }
 ```
 
@@ -60,7 +60,7 @@ void Update()
 
 | アクションの種類 | クラス | 主なメンバー |
 |---|---|---|
-| Button | `InputButton` | `GetKey()` `GetKeyDown()` `GetKeyUp()` `OnPressed()` `OnReleased()` |
+| Button | `InputButton` | `Key` `Down` `Up`（プロパティ）、`OnPressed()` `OnReleased()` |
 | Vector2 | `InputVector2` | `Value` `OnChanged()` |
 
 上記以外（float、Vector3 など）は、現在は警告を出して生成をスキップします。
@@ -92,7 +92,7 @@ private void OnDisable()
 | `InputButton.OnReleased(Action)` | ボタンが離された（canceled） |
 | `InputVector2.OnChanged(Action<Vector2>)` | 値が変化した。入力が止まると `Vector2.zero` で通知される |
 
-`Interact` のように Input Actions 側で長押し（Hold）などの Interaction を設定している場合、`OnPressed` は**長押しが成立したとき**に発火します。`GetKey()` は押した瞬間から true になります。
+`Interact` のように Input Actions 側で長押し（Hold）などの Interaction を設定している場合、`OnPressed` は**長押しが成立したとき**に発火します。`Key` は押した瞬間から true になります。
 
 ## 入力のロック
 
@@ -123,7 +123,7 @@ using var block = InputBlocker.Block();
 - 所属グループが `SetEnabled(false)`
 - 所属グループが `Block()` 中
 
-ロック状態のアクションは、`GetKey` 系が `false`、`Value` が `Vector2.zero` を返し、イベントも発火しません。
+ロック状態のアクションは、`Key` / `Down` / `Up` が `false`、`Value` が `Vector2.zero` を返し、イベントも発火しません。
 
 ### `SetEnabled` と `Block()` の使い分け
 
@@ -183,9 +183,9 @@ InputSource.Use(myInputActionAsset);
 ## 注意点
 
 - **無効化中の「離し」は通知されません**
-  押したままロックして、ロック中にキーを離しても `OnReleased` は発火しません。チャージ攻撃の解除のように重要な処理は、ロック時に自前でリセットするか、`GetKey()` の状態を見てください。
+  押したままロックして、ロック中にキーを離しても `OnReleased` は発火しません。チャージ攻撃の解除のように重要な処理は、ロック時に自前でリセットするか、`Key` の状態を見てください。
 - **ロック解除直後の押しっぱなし**
-  ロック中に押されたキーは、解除した直後に `GetKey()` が true に見えます（キーの物理状態は変わっているため）。
+  ロック中に押されたキーは、解除した直後に `Key` が true に見えます（キーの物理状態は変わっているため）。
 - **`Look` の感度**
   マウスは「フレームあたりの移動量」、スティックは「傾き」でスケールが違います。感度は使う側で調整してください。
 - **生成されたコードは手編集しない**
