@@ -7,9 +7,9 @@ namespace CoreKit.Inputs
     {
         public InputButton(string path, InputGroup group = null) : base(path, group) { }
 
-        public bool GetKey() => !IsBlocked && Ready().IsPressed();
-        public bool GetKeyDown() => !IsBlocked && Ready().WasPressedThisFrame();
-        public bool GetKeyUp() => !IsBlocked && Ready().WasReleasedThisFrame();
+        public bool Key => !IsBlocked && Ready().IsPressed();
+        public bool Down => !IsBlocked && Ready().WasPressedThisFrame();
+        public bool Up => !IsBlocked && Ready().WasReleasedThisFrame();
 
         public IDisposable OnPressed(Action callback)
         {
