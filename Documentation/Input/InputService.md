@@ -142,27 +142,6 @@ talk.Dispose();                            // カウント1（まだロック中
 pause.Dispose();                           // カウント0（解除）
 ```
 
-## R3 との連携（任意）
-
-R3 が導入されている環境では、拡張メソッドが使えます（`COREKIT_R3` が自動で定義されます）。
-
-```csharp
-using CoreKit.Inputs.R3;
-using R3;
-
-InputService.Player.Interact.PressedAsObservable()
-    .Subscribe(_ => Interact())
-    .AddTo(this);
-
-InputService.Player.Sprint.HeldAsReactiveProperty()
-    .Subscribe(held => animator.SetBool("Sprint", held))
-    .AddTo(this);
-
-InputService.Player.Move.ChangedAsObservable()
-    .Subscribe(v => Debug.Log(v))
-    .AddTo(this);
-```
-
 | 拡張メソッド | 対象 | 内容 |
 |---|---|---|
 | `PressedAsObservable()` | `InputButton` | 押下の通知 |
