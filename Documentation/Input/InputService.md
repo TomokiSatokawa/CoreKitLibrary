@@ -1,4 +1,4 @@
-# CoreKit.Inputs
+# InputService
 
 Unity の Input System を、旧 `InputManager` のような感覚で使うためのライブラリです。
 
