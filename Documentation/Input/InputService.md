@@ -219,27 +219,7 @@ Runtime/
   InputBase.cs         InputButton / InputVector2 の共通処理
   InputButton.cs       ボタン入力
   InputVector2.cs      Vector2 入力
-Runtime.R3/
-  CoreKit.Inputs.R3.asmdef
-  InputR3Extensions.cs
 Editor/
   CoreKit.Inputs.Editor.asmdef
   InputServiceGenerator.cs   InputService の自動生成
-Tests/Editor/
-  CoreKit.Inputs.Tests.asmdef
-  InputTestBase.cs
-  InputButtonTests.cs
-  InputVector2Tests.cs
-  InputBlockerTests.cs
-  InputGroupTests.cs
 ```
-
-## テスト
-
-`Window > General > Test Runner` の **EditMode** タブで実行します。Input System の `InputTestFixture` を使い、仮想キーボードで入力をシミュレートしています。
-
-Git URL で導入したパッケージのテストを実行する場合は、利用側の `manifest.json` の `testables` にパッケージ名を追加してください。
-
-## 動作確認用サンプル
-
-`TestCode` コンポーネントを空の GameObject に付けて再生すると、各入力の状態とイベントログを画面に表示します。**B キー**で全体ロックの ON/OFF を切り替えられます。
