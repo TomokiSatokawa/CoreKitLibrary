@@ -4,7 +4,9 @@
       "version": "file:com.t0m0.corekit",
       "depth": 0,
       "source": "embedded",
-      "dependencies": {}
+      "dependencies": {
+        "com.unity.inputsystem": "1.14.0"
+      }
     },
     "com.unity.ai.navigation": {
       "version": "2.0.10",

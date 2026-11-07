@@ -3,5 +3,8 @@
     "displayName": "CoreKit",    
     "version": "0.1.0-alpha.1",           
     "unity": "6000.3",            
-    "description": "コアキット"
+    "description": "コアキット",
+    "dependencies": {
+  "com.unity.inputsystem": "1.14.0"
+}
 }
