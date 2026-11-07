@@ -3,27 +3,58 @@ using CoreKit.Inputs;
 
 public static class InputService
 {
-    public static class Player
+    public static readonly PlayerGroup Player = new PlayerGroup();
+
+    public sealed class PlayerGroup : InputGroup
     {
-        public static readonly InputVector2 Move = new InputVector2("Player/Move");
-        public static readonly InputVector2 Look = new InputVector2("Player/Look");
-        public static readonly InputButton Attack = new InputButton("Player/Attack");
-        public static readonly InputButton Interact = new InputButton("Player/Interact");
-        public static readonly InputButton Crouch = new InputButton("Player/Crouch");
-        public static readonly InputButton Jump = new InputButton("Player/Jump");
-        public static readonly InputButton Previous = new InputButton("Player/Previous");
-        public static readonly InputButton Next = new InputButton("Player/Next");
-        public static readonly InputButton Sprint = new InputButton("Player/Sprint");
+        public readonly InputVector2 Move;
+        public readonly InputVector2 Look;
+        public readonly InputButton Attack;
+        public readonly InputButton Interact;
+        public readonly InputButton Crouch;
+        public readonly InputButton Jump;
+        public readonly InputButton Previous;
+        public readonly InputButton Next;
+        public readonly InputButton Sprint;
+
+        internal PlayerGroup() : base("Player")
+        {
+            Move = new InputVector2("Player/Move", this);
+            Look = new InputVector2("Player/Look", this);
+            Attack = new InputButton("Player/Attack", this);
+            Interact = new InputButton("Player/Interact", this);
+            Crouch = new InputButton("Player/Crouch", this);
+            Jump = new InputButton("Player/Jump", this);
+            Previous = new InputButton("Player/Previous", this);
+            Next = new InputButton("Player/Next", this);
+            Sprint = new InputButton("Player/Sprint", this);
+        }
     }
-    public static class UI
+
+    public static readonly UIGroup UI = new UIGroup();
+
+    public sealed class UIGroup : InputGroup
     {
-        public static readonly InputVector2 Navigate = new InputVector2("UI/Navigate");
-        public static readonly InputButton Submit = new InputButton("UI/Submit");
-        public static readonly InputButton Cancel = new InputButton("UI/Cancel");
-        public static readonly InputVector2 Point = new InputVector2("UI/Point");
-        public static readonly InputButton Click = new InputButton("UI/Click");
-        public static readonly InputButton RightClick = new InputButton("UI/RightClick");
-        public static readonly InputButton MiddleClick = new InputButton("UI/MiddleClick");
-        public static readonly InputVector2 ScrollWheel = new InputVector2("UI/ScrollWheel");
+        public readonly InputVector2 Navigate;
+        public readonly InputButton Submit;
+        public readonly InputButton Cancel;
+        public readonly InputVector2 Point;
+        public readonly InputButton Click;
+        public readonly InputButton RightClick;
+        public readonly InputButton MiddleClick;
+        public readonly InputVector2 ScrollWheel;
+
+        internal UIGroup() : base("UI")
+        {
+            Navigate = new InputVector2("UI/Navigate", this);
+            Submit = new InputButton("UI/Submit", this);
+            Cancel = new InputButton("UI/Cancel", this);
+            Point = new InputVector2("UI/Point", this);
+            Click = new InputButton("UI/Click", this);
+            RightClick = new InputButton("UI/RightClick", this);
+            MiddleClick = new InputButton("UI/MiddleClick", this);
+            ScrollWheel = new InputVector2("UI/ScrollWheel", this);
+        }
     }
+
 }

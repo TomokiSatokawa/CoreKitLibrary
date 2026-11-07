@@ -6,16 +6,16 @@ namespace CoreKit.Inputs
 {
     public sealed class InputVector2 : InputBase
     {
-        public InputVector2(string path) : base(path) { }
+        public InputVector2(string path, InputGroup group = null) : base(path, group) { }
 
-        public Vector2 Value => InputBlocker.IsBlocked ? default : Ready().ReadValue<Vector2>();
+        public Vector2 Value => IsBlocked ? default : Ready().ReadValue<Vector2>();
 
         public IDisposable OnChanged(Action<Vector2> callback)
         {
             var a = Ready();
             void Handler(InputAction.CallbackContext c)
             {
-                if (!InputBlocker.IsBlocked) callback(c.ReadValue<Vector2>());
+                if (!IsBlocked) callback(c.ReadValue<Vector2>());
             }
             a.performed += Handler;
             a.canceled += Handler;

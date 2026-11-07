@@ -40,8 +40,13 @@ namespace CoreKit.Inputs.Editor
 
             foreach (var map in asset.actionMaps)
             {
-                sb.AppendLine($"    public static class {Id(map.name)}");
+                var id = Id(map.name);
+                sb.AppendLine($"    public static readonly {id}Group {id} = new {id}Group();");
+                sb.AppendLine();
+                sb.AppendLine($"    public sealed class {id}Group : InputGroup");
                 sb.AppendLine("    {");
+
+                var inits = new StringBuilder();
                 foreach (var a in map.actions)
                 {
                     string type;
@@ -52,14 +57,22 @@ namespace CoreKit.Inputs.Editor
                         Debug.LogWarning($"[CoreKit.Inputs] '{map.name}/{a.name}'（{a.expectedControlType}）は未対応のため生成をスキップしました");
                         continue;
                     }
-                    sb.AppendLine($"        public static readonly {type} {Id(a.name)} = new {type}(\"{map.name}/{a.name}\");");
+                    sb.AppendLine($"        public readonly {type} {Id(a.name)};");
+                    inits.AppendLine($"            {Id(a.name)} = new {type}(\"{map.name}/{a.name}\", this);");
                 }
+
+                sb.AppendLine();
+                sb.AppendLine($"        internal {id}Group() : base(\"{map.name}\")");
+                sb.AppendLine("        {");
+                sb.Append(inits);
+                sb.AppendLine("        }");
                 sb.AppendLine("    }");
+                sb.AppendLine();
             }
             sb.AppendLine("}");
 
             var text = sb.ToString();
-            if (File.Exists(OutputPath) && File.ReadAllText(OutputPath) == text) return; // 変更なしなら再コンパイルを避ける
+            if (File.Exists(OutputPath) && File.ReadAllText(OutputPath) == text) return;
 
             Directory.CreateDirectory(Path.GetDirectoryName(OutputPath));
             File.WriteAllText(OutputPath, text);

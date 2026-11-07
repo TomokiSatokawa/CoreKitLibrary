@@ -5,16 +5,16 @@ namespace CoreKit.Inputs
 {
     public sealed class InputButton : InputBase
     {
-        public InputButton(string path) : base(path) { }
+        public InputButton(string path, InputGroup group = null) : base(path, group) { }
 
-        public bool Value => !InputBlocker.IsBlocked && Ready().IsPressed();
-        public bool Down => !InputBlocker.IsBlocked && Ready().WasPressedThisFrame();
-        public bool Up => !InputBlocker.IsBlocked && Ready().WasReleasedThisFrame();
+        public bool GetKey() => !IsBlocked && Ready().IsPressed();
+        public bool GetKeyDown() => !IsBlocked && Ready().WasPressedThisFrame();
+        public bool GetKeyUp() => !IsBlocked && Ready().WasReleasedThisFrame();
 
         public IDisposable OnPressed(Action callback)
         {
             var a = Ready();
-            void Handler(InputAction.CallbackContext _) { if (!InputBlocker.IsBlocked) callback(); }
+            void Handler(InputAction.CallbackContext _) { if (!IsBlocked) callback(); }
             a.performed += Handler;
             return new InputBlocker.Token(() => a.performed -= Handler);
         }
@@ -22,7 +22,7 @@ namespace CoreKit.Inputs
         public IDisposable OnReleased(Action callback)
         {
             var a = Ready();
-            void Handler(InputAction.CallbackContext _) { if (!InputBlocker.IsBlocked) callback(); }
+            void Handler(InputAction.CallbackContext _) { if (!IsBlocked) callback(); }
             a.canceled += Handler;
             return new InputBlocker.Token(() => a.canceled -= Handler);
         }
