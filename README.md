@@ -14,6 +14,7 @@ https://github.com/TomokiSatokawa/CoreKitLibrary.git?path=/Packages/com.t0m0.cor
 
 ### FloatRange
 float型の範囲値を扱う構造体です。範囲判定、値の制限、範囲内のランダム値取得に対応しています。
+
 [FloatRangeの使い方](Documentation/Common/FloatRange.md)
 
 ### FlagRegistry
