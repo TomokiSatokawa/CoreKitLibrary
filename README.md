@@ -12,6 +12,10 @@ https://github.com/TomokiSatokawa/CoreKitLibrary.git?path=/Packages/com.t0m0.cor
 
 ## Features
 
+### InputService
+InputSystemをInputManagerのように楽に使えます。
+[InputServiceの使い方](Documentation/Input/InputService.md)
+
 ### FloatRange
 float型の範囲値を扱う構造体です。範囲判定、値の制限、範囲内のランダム値取得に対応しています。
 [FloatRangeの使い方](Documentation/Common/FloatRange.md)
