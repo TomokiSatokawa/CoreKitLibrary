@@ -2,7 +2,7 @@
     "name": "com.t0m0.corekit", 
     "displayName": "CoreKit",    
     "version": "0.1.0-alpha.1",           
-    "unity": "6000.3.10f1",            
+    "unity": "6000.3",            
     "description": "コアキット",
     "dependencies": {           
         "com.unity.package-1": "1.0.0"
