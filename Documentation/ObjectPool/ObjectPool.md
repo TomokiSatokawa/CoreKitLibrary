@@ -1,71 +1,87 @@
-# ObjectPool
+# PoolObject
 
-CoreKitLibrary の `CoreKit.ObjectPool` 機能の全体説明です。
-Prefab 単位でオブジェクトを再利用し、生成と破棄のコストを減らします。
-
-## 必要環境
-
-- Unity 6 以上(`InstantiateAsync` を使用)
-- UniTask
-
-## 構成
-
-| クラス | 役割 | 詳細 |
-| --- | --- | --- |
-| `PoolManager` | Prefab 単位でプールを管理し、取得と返却を行う | [PoolManager.md](PoolManager.md) |
-| `PoolObject` | プールされるオブジェクトにアタッチする。有効化・返却のイベントと自動返却を担当する | [PoolObject.md](PoolObject.md) |
-| `PoolPrefabDatabase` | プール対象の Prefab と、事前生成数を登録するデータ | [PoolPrefabDatabase.md](PoolPrefabDatabase.md) |
-
-## 全体の流れ
-
-1. `PoolManager` が `Awake` で、`PoolPrefabDatabase` に登録された数だけオブジェクトを事前に生成する
-2. 呼び出し側が `PoolManager.Get(prefab)` でオブジェクトを取得する
-3. 使い終わったら `PoolManager.Release(poolObject)` で返却する
-4. 返却されたオブジェクトは、次回の `Get` で再利用される
+プールされるオブジェクトにアタッチする `MonoBehaviour` です。
+有効化と返却のイベント、時間経過による自動返却を担当します。
+全体の説明は [ObjectPool.md](ObjectPool.md) を参照してください。
 
 ## セットアップ
 
-1. プール対象の Prefab のルートに `PoolObject` をアタッチする
-2. `PoolPrefabDatabase` のアセットを作成し、Prefab と事前生成数を登録する
-3. シーンに `PoolManager` を置き、Database を設定する
-4. コードから `Get` と `Release` を呼ぶ
+プール対象の Prefab のルートに `PoolObject` をアタッチします。
+`PoolManager.Get` に渡す Prefab は、この `PoolObject` の参照です。
 
-各手順の詳細は、それぞれのドキュメントを参照してください。
+## インスペクター
 
-## 最小のサンプル
+| 項目 | 内容 |
+| --- | --- |
+| `On Activate` | `Get` で有効化されたときに呼ばれるイベント |
+| `On Release` | 返却されたときに呼ばれるイベント |
+| `Is Auto Release` | 有効化から一定時間後に、自動で返却するか |
+| `Auto Release Duration` | 自動返却までの時間(秒) |
+| `Custom Component` | `GetCustomComponent` で取得したいコンポーネントを登録する配列 |
+
+## API
+
+### `bool IsActive`
+
+オブジェクトが使用中かどうかを返します。
+`PoolManager` は、この値が `false` のオブジェクトを未使用として再利用します。
+
+生成直後は `true` です。事前生成では、生成後に `Release` が呼ばれて `false` になります。
+
+### `void Activate()`
+
+オブジェクトを使用中にして、有効化します。通常は `PoolManager.Get` が呼ぶので、直接呼ぶ必要はありません。
+
+1. `IsActive` を `true` にする
+2. `SetActive(true)` で有効化する
+3. 自動返却がオンなら、返却する時刻を設定する
+4. `On Activate` を呼ぶ
+
+### `void Release()`
+
+オブジェクトを返却します。`PoolManager.Release` から呼ばれるほか、直接呼んでも構いません。
+
+1. `IsActive` を `false` にする
+2. `On Release` を呼ぶ
+3. `SetActive(false)` で非アクティブにする
+
+すでに返却済みの場合は、何もしません。`On Release` が二重に呼ばれることはありません。
+
+### `T GetCustomComponent<T>() where T : MonoBehaviour`
+
+`Custom Component` に登録したコンポーネントのうち、型 `T` に一致するものを返します。
+`Get` で取得した `PoolObject` から、`GetComponent` を使わずに目的のコンポーネントへアクセスできます。
 
 ```csharp
-using CoreKit.ObjectPool;
-using UnityEngine;
+var poolObject = _poolManager.Get(_bulletPrefab);
 
-public sealed class BulletSpawner : MonoBehaviour
-{
-    [SerializeField] private PoolManager _poolManager;
-    [SerializeField] private PoolObject _bulletPrefab;
+if (poolObject == null)
+    return;
 
-    public void Fire(Vector3 position, Quaternion rotation)
-    {
-        var bullet = _poolManager.Get(_bulletPrefab);
+var bullet = poolObject.GetCustomComponent<Bullet>();
 
-        if (bullet == null)
-            return;
+if (bullet == null)
+    return;
 
-        bullet.transform.SetPositionAndRotation(position, rotation);
-    }
-}
+bullet.Launch(direction);
 ```
 
-## 状態の確認(Pool Monitor)
+- 登録されていない型を指定した場合は、エラーログを出して `null` を返します。使う前に `null` チェックをしてください
+- 同じ型が複数登録されている場合は、配列の先頭にあるものを返します
+- 派生クラスも取得できます。たとえば `HomingBullet`(`Bullet` を継承)を登録していれば、`GetCustomComponent<Bullet>()` で取得できます
+- 検索は配列を先頭から順に調べるので、登録数は数個程度に抑えてください
 
-Play 中のプールの状態は、メニューの `CoreKit > Pool Monitor` で確認できます。
+## 自動返却
 
-- Prefab ごとの稼働数と総数を表示します
-- Prefab を開くと、各インスタンスが Active か Inactive かを確認できます
-- インスタンスの名前を押すと、Hierarchy 上で選択されます
-- 破棄済みのオブジェクトが残っている場合は `(Destroyed)` と表示されます
+エフェクトや弾など、一定時間で消えるオブジェクトは `Is Auto Release` をオンにします。
+呼び出し側で `Release` する必要がなくなります。
+
+- 時間は `Time.time` 基準です。`Time.timeScale = 0` の間はカウントが進みません
+- 自動返却を使わないオブジェクトでは、`Update` は動きません
 
 ## 注意事項
 
+- `On Activate` の時点では、位置や回転は `Get` の呼び出し側でまだ設定されていません
 - 取得したオブジェクトを `Destroy` しないでください。返却は必ず `Release` で行います
-- シーン遷移でプール内のオブジェクトが破棄されると、`PoolManager` は破棄済みの参照を保持したままになります。`PoolManager` を `DontDestroyOnLoad` にするか、シーンごとに用意してください
-- 複数の `PoolManager` を置く場合、プールは `PoolManager` ごとに独立します
+- `IsActive` の初期値(`true`)を変えると、事前生成したオブジェクトが返却されなくなります
+- `GetCustomComponent` で取得するコンポーネントは、Prefab のインスペクターで `Custom Component` に登録しておく必要があります
