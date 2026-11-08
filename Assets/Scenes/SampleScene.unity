@@ -441,7 +441,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1871422044}
-  - component: {fileID: 1871422043}
+  - component: {fileID: 1871422045}
+  - component: {fileID: 1871422046}
   m_Layer: 0
   m_Name: Test
   m_TagString: Untagged
@@ -449,18 +450,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1871422043
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1871422042}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb76190e65c576c47a0c7bfeee8ea1f7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TestCode
 --- !u!4 &1871422044
 Transform:
   m_ObjectHideFlags: 0
@@ -476,6 +465,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1871422045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1871422042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6a77fa9fd0026b44aee7b08daea5426, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: CoreKit::CoreKit.ObjectPool.PoolManager
+  _prefabDatabase: {fileID: 11400000, guid: 97c9be31b1814474bac238b1817aaf7c, type: 2}
+  _maxSpawnCountPerFrame: 1
+--- !u!114 &1871422046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1871422042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb76190e65c576c47a0c7bfeee8ea1f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TestCode
+  _poolManager: {fileID: 1871422045}
+  _prefab: {fileID: 5882061144344335942, guid: 2232fa170d21d70488b16b4eb1b60043, type: 3}
+  _minObjectCount: 1
+  _maxObjectCount: 10
+  _testInterval: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
