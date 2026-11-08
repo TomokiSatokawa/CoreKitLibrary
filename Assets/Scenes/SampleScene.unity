@@ -492,10 +492,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TestCode
   _poolManager: {fileID: 1871422045}
-  _prefab: {fileID: 5882061144344335942, guid: 2232fa170d21d70488b16b4eb1b60043, type: 3}
-  _minObjectCount: 1
-  _maxObjectCount: 10
-  _testInterval: 1
+  _prefab: {fileID: 5882061144344335942, guid: 9ad1e501e8903f44fb07c0636c468e23, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

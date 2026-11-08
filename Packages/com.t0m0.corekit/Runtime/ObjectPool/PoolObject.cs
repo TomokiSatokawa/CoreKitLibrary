@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -12,6 +14,7 @@ namespace CoreKit.ObjectPool
         [SerializeField] private UnityEvent _onRelease;
         [SerializeField] private bool _isAutoRelease;
         [SerializeField] private float _autoReleaseDuration;
+        [SerializeField] private MonoBehaviour[] _customComponent;
 
         private float _autoReleaseTime;
         private bool _isActive = true;
@@ -54,6 +57,19 @@ namespace CoreKit.ObjectPool
 
             _onRelease.Invoke();
             gameObject.SetActive(false);
+        }
+
+        public T GetCustomComponent<T>() where T : MonoBehaviour
+        {
+            for (var i = 0; i < _customComponent.Length; i++)
+            {
+                if (_customComponent[i] is T component)
+                    return component;
+            }
+
+            Debug.LogError($"[PoolObject] カスタムコンポーネントが登録されていません: {typeof(T).Name} (Object: {name})");
+
+            return null;
         }
     }
 }
