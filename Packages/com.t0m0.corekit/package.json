@@ -5,7 +5,8 @@
   "unity": "6000.3",
   "description": "Unity\u958b\u767a\u3067\u6c4e\u7528\u7684\u306b\u4f7f\u7528\u3067\u304d\u308b\u6a5f\u80fd\u3092\u307e\u3068\u3081\u305f\u30e9\u30a4\u30d6\u30e9\u30ea\u3067\u3059\u3002",
   "dependencies": {
-    "com.unity.inputsystem": "1.14.0"
+    "com.unity.inputsystem": "1.14.0",
+    "com.cysharp.unitask": "2.5.11"
   },
   "documentationUrl": "https://github.com/TomokiSatokawa/CoreKitLibrary/tree/main/Documentation"
 }

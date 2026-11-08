@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace CoreKit.ObjectPool
@@ -9,9 +11,58 @@ namespace CoreKit.ObjectPool
     public sealed class PoolManager : MonoBehaviour
     {
         [SerializeField] private PoolPrefabDatabase _prefabDatabase;
+        [SerializeField] private int _maxSpawnCountPerFrame;
 
         private readonly Dictionary<PoolObject, List<PoolObject>> _poolObjects = new();
         public IReadOnlyDictionary<PoolObject, List<PoolObject>> PoolObjects => _poolObjects;
+
+        private void Awake()
+        {
+            if (_prefabDatabase == null)
+            {
+                Debug.LogError("[PoolManager] PrefabDatabaseÇ™ñ¢ê›íËÇ≈Ç∑");
+                return;
+            }
+
+            InitializePoolAsync().Forget();
+        }
+
+        private async UniTaskVoid InitializePoolAsync()
+        {
+            var batchSize = Mathf.Max(1, _maxSpawnCountPerFrame);
+
+            foreach (var prefabData in _prefabDatabase.PrefabDatas)
+            {
+                var prefab = prefabData.Prefab;
+
+                if (prefab == null)
+                {
+                    Debug.LogError("[PoolManager] PrefabDatabaseÇ…PrefabÇ™ñ¢ê›íËÇÃóvëfÇ™Ç†ÇËÇ‹Ç∑");
+                    continue;
+                }
+
+                if (!_poolObjects.TryGetValue(prefab, out var list))
+                {
+                    list = new List<PoolObject>(prefabData.Count);
+                    _poolObjects.Add(prefab, list);
+                }
+
+                var remaining = prefabData.Count;
+
+                while (remaining > 0)
+                {
+                    var count = Mathf.Min(remaining, batchSize);
+                    var created = await InstantiateAsync(prefab, count);
+
+                    list.AddRange(created);
+
+                    for (var i = 0; i < created.Length; i++)
+                        created[i].Release();
+
+                    remaining -= count;
+                }
+            }
+        }
 
         public PoolObject Get(PoolObject prefab)
         {
