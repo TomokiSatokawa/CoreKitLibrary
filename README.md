@@ -29,3 +29,9 @@ float型の範囲値を扱う構造体です。範囲判定、値の制限、範
 複数の要求元からのフラグ登録を管理するクラスです。トークンを使用して登録元ごとに状態を管理し、1つでも登録があればフラグを `true` にします。
 
 - [詳細・使い方を見る →](Documentation/Flag/FlagRegistry.md)
+
+### ObjectPool
+
+Prefab単位でオブジェクトを再利用するオブジェクトプールです。事前生成、自動返却、Editorウィンドウでの状態確認に対応しています。
+
+- [詳細・使い方を見る →](Documentation/ObjectPool/ObjectPool.md)
