@@ -14,6 +14,23 @@ namespace CoreKit
         public float Min => _min;
         public float Max => _max;
 
+        private FloatRange(float min, float max)
+        {
+            _min = min;
+            _max = max;
+        }
+
+        public static FloatRange Create(float min, float max)
+        {
+            if (min > max)
+            {
+                Debug.LogWarning($"[FloatRange] minがmaxより大きいため入れ替えました: min={min}, max={max}");
+                (min, max) = (max, min);
+            }
+
+            return new FloatRange(min, max);
+        }
+
         /// <summary>
         /// 値が範囲内か判定する（最小値を含み、最大値を含まない）
         /// </summary>
