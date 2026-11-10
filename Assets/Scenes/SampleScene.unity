@@ -491,11 +491,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb76190e65c576c47a0c7bfeee8ea1f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TestCode
-  _poolManager: {fileID: 1871422045}
-  _prefab: {fileID: 5882061144344335942, guid: 9ad1e501e8903f44fb07c0636c468e23, type: 3}
+  _database: {fileID: 11400000, guid: a29d3b9581a32374eafbe0cf201e0443, type: 2}
   _dynamicEnum:
     _definition: {fileID: 11400000, guid: d00c919442ada6740b0ab697463c0ec7, type: 2}
-    _guid: ae507f683fa94c4f8c167a74ac1cbfa1
+    _guid: 2177745a372242c59f2f9991c74a6b91
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

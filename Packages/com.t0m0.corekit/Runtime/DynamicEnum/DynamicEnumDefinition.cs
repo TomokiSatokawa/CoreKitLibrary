@@ -8,7 +8,7 @@ namespace CoreKit.DynamicEnum
     /// <summary>
     /// DynamicEnum‚Ì‘I‘ğˆ‚ğŠÇ—‚·‚é
     /// </summary>
-    [CreateAssetMenu(menuName = "Dynamic Enum/Definition")]
+    [CreateAssetMenu(menuName = "CoreKit/Dynamic Enum/Definition")]
     public class DynamicEnumDefinition : ScriptableObject
     {
         [Serializable]
