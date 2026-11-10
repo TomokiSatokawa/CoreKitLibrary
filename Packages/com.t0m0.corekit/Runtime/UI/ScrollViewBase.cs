@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Common.UI
+namespace CoreKit.UI
 {
     /// <summary>
     /// ScrollViewのContents生成クラスのベースクラス
