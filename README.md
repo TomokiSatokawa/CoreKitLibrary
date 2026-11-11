@@ -35,3 +35,15 @@ float型の範囲値を扱う構造体です。範囲判定、値の制限、範
 Prefab単位でオブジェクトを再利用するオブジェクトプールです。事前生成、自動返却、Editorウィンドウでの状態確認に対応しています。
 
 - [詳細・使い方を見る →](Documentation/ObjectPool/ObjectPool.md)
+
+### DynamicEnum
+
+コードを書き換えずに、アセット上で選択肢を追加・編集できる列挙型のような仕組みです。値はGUIDで識別されるため、項目名を変更しても参照が壊れません。
+
+- [詳細・使い方を見る →](Documentation/DynamicEnum/DynamicEnum.md)
+
+### SoundSection
+
+BGMやSEなど、サウンドの種類ごとの再生を管理するクラスです。種類（DynamicEnum）指定またはAudioClip指定での再生、ワンショット再生、音量のフェード変更に対応しています。
+
+- [詳細・使い方を見る →](Documentation/Sound/SoundSection.md)
