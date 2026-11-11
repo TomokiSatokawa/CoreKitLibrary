@@ -15,8 +15,8 @@ namespace CoreKit
     [System.Serializable]
     public class SoundSection : IReadOnlySoundSection
     {
-        [SerializeField] private SoundDatabase _database;
-        [SerializeField] private AudioSource _audioScore;
+        [SerializeField] protected SoundDatabase _database;
+        [SerializeField] protected AudioSource _audioScore;
 
         private VolumeController _volumeController;
 

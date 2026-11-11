@@ -1,4 +1,3 @@
-//AI
 using System;
 using UnityEngine;
 
