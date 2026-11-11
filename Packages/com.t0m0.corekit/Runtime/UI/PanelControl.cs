@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Common.UI
+namespace CoreKit.UI
 {
     /// <summary>
     /// UIWindow‚Ì•\Ž¦/”ñ•\Ž¦

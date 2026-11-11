@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f3e51d6f13f77d4291f8b3766fb8243, type: 3}
+  m_Name: New Dynamic Enum Definition
+  m_EditorClassIdentifier: CoreKit::Common.DynamicEnum.DynamicEnumDefinition
+  _className: SEClip
+  _entries:
+  - Name: 1
+    Guid: d7f9df514fe440f78f3f8148fbd86e9e
+  - Name: 2
+    Guid: 2177745a372242c59f2f9991c74a6b91
+  - Name: 3
+    Guid: 4d05b8e6e95442c29ac93273391ddef0
+  - Name: 4
+    Guid: ae507f683fa94c4f8c167a74ac1cbfa1
+  _previousClassName: SEClip
