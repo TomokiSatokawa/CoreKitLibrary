@@ -6,13 +6,13 @@ namespace CoreKit.UI.Selector
     /// <summary>
     /// 選択可能な要素の選択状態を管理する
     /// </summary>
-    public class SelectionController<T> : IDisposable where T : ISelectable<T>
+    public class SingleSelectionController<T> : IDisposable where T : ISelectable<T>
     {
         private readonly T[] _selectableArray;
 
         public T CurrentSelect { get; private set; }
 
-        public SelectionController(T[] selectables, int startSelectIndex)
+        public SingleSelectionController(T[] selectables, int startSelectIndex)
         {
             _selectableArray = selectables;
 
