@@ -1,4 +1,3 @@
-//AI
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
