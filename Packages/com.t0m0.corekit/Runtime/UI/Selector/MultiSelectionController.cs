@@ -13,7 +13,7 @@ namespace CoreKit.UI.Selector
         private readonly bool[] _selectStates;
         private readonly Dictionary<T, int> _indexMap;
 
-        public MultiSelectionController(T[] selectables, int[] startSelectIndex)
+        public MultiSelectionController(T[] selectables,params int[] startSelectIndex)
         {
             _selectableArray = selectables;
             _selectStates = new bool[selectables.Length];
