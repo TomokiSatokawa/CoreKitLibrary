@@ -17,26 +17,35 @@ namespace CoreKit.UI
         public bool IsActive { get; private set; }
         public RectTransform Rect => _rectTransform;
 
-        private void Awake()
+        private void Reset()
+        {
+            _canvasGroup = GetComponent<CanvasGroup>();
+            _rectTransform = GetComponent<RectTransform>();
+        }
+
+        private void OnValidate()
         {
             if (_canvasGroup == null)
                 _canvasGroup = GetComponent<CanvasGroup>();
+
             if (_rectTransform == null)
                 _rectTransform = GetComponent<RectTransform>();
+        }
 
+        private void Awake()
+        {
             SetVisible(false);
         }
 
         public virtual void OnActive(float duration = 0)
         {
             _activeAction?.Invoke();
-
             SetVisible(true);
         }
+
         public virtual void OnHidden(float duration = 0)
         {
             _hiddenAction?.Invoke();
-
             SetVisible(false);
         }
 
@@ -48,7 +57,6 @@ namespace CoreKit.UI
             float alpha = visible ? 1f : 0f;
 
             _canvasGroup.alpha = alpha;
-
             _canvasGroup.blocksRaycasts = visible;
             IsActive = visible;
         }
