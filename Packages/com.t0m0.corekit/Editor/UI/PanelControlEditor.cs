@@ -41,7 +41,6 @@ namespace CoreKit.Editor.UI
 
             canvasGroup.alpha = visible ? 1f : 0f;
             canvasGroup.blocksRaycasts = visible;
-            canvasGroup.interactable = visible;
 
             EditorUtility.SetDirty(canvasGroup);
         }
