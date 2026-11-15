@@ -47,3 +47,9 @@ Prefab単位でオブジェクトを再利用するオブジェクトプール�
 BGMやSEなど、サウンドの種類ごとの再生を管理するクラスです。種類（DynamicEnum）指定またはAudioClip指定での再生、ワンショット再生、音量のフェード変更に対応しています。
 
 - [詳細・使い方を見る →](Documentation/Sound/Sound.md)
+
+### UI
+
+UI まわりで汎用的に使える機能をまとめたものです。
+
+- [詳細・使い方を見る →](Documentation/UI/UI.md)
