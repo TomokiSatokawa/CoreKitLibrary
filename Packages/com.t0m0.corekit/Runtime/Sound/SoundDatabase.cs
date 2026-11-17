@@ -3,7 +3,7 @@ using CoreKit.DynamicEnum;
 using UnityEngine;
 using UnityEngine.Audio;
 
-namespace CoreKit
+namespace CoreKit.Sound
 {
     /// <summary>
     /// サウンドデータを管理するデータベース
@@ -11,34 +11,32 @@ namespace CoreKit
     [CreateAssetMenu(fileName = "SoundDatabase", menuName = "CoreKit/Sound/SoundDatabase")]
     public class SoundDatabase : ScriptableObject
     {
-        [SerializeField] private ClipData[] _clipDatas;
-        [SerializeField] private RandomClipData[] _randomClipData;
+        [SerializeReference,SubclassSelector] private ClipData[] _clipDatas;
 
         private Dictionary<DynamicEnumValue, ClipData> _clipDataDictionary;
-        private Dictionary<DynamicEnumValue, RandomClipData> _randomCipDataDictionary;
 
         [System.Serializable]
-        public class ClipData
+        public abstract class ClipData
         {
-            [SerializeField] private DynamicEnumValue _type;
-            [SerializeField] private AudioClip _clip;
-            [SerializeField, Range(0f, 1f)] private float _volume;
+            [SerializeField] protected DynamicEnumValue _type;
+            [SerializeField, Range(0f, 1f)] protected float _volume = 1f;
 
             public DynamicEnumValue Type => _type;
-            public AudioClip Clip => _clip;
             public float Volume => _volume;
+            public abstract void GetClip(out AudioClip clip, out float volume);
         }
 
         [System.Serializable]
-        public class RandomClipData
+        public class SingleClipData:ClipData
         {
-            [SerializeField] private DynamicEnumValue _type;
-            [SerializeField] private AudioResource _audioResource;
-            [SerializeField, Range(0f, 1f)] private float _volume;
+            [SerializeField] private AudioClip _clip;
+            public AudioClip Clip => _clip;
 
-            public DynamicEnumValue Type => _type;
-            public AudioResource AudioResource => _audioResource;
-            public float Volume => _volume;
+            public override void GetClip(out AudioClip clip, out float volume)
+            {
+                clip = _clip;
+                volume = _volume;
+            }
         }
 
         private void OnEnable()
@@ -57,30 +55,11 @@ namespace CoreKit
                     Debug.LogError($"SoundTypeが重複しています: {clipData.Type}", this);
                 }
             }
-
-            _randomCipDataDictionary = new Dictionary<DynamicEnumValue, RandomClipData>(_clipDatas.Length);
-
-            foreach (var clipData in _randomClipData)
-            {
-                if (!_randomCipDataDictionary.TryAdd(clipData.Type, clipData))
-                {
-                    Debug.LogError($"SoundTypeが重複しています: {clipData.Type}", this);
-                }
-            }
         }
 
         public ClipData GetClipData(DynamicEnumValue type)
         {
             if (_clipDataDictionary.TryGetValue(type, out var clipData))
-                return clipData;
-
-            Debug.LogError($"指定されたSoundTypeが登録されていません。 Type: {type}", this);
-            return null;
-        }
-
-        public RandomClipData GetRandomClipData(DynamicEnumValue type)
-        {
-            if (_randomCipDataDictionary.TryGetValue(type, out var clipData))
                 return clipData;
 
             Debug.LogError($"指定されたSoundTypeが登録されていません。 Type: {type}", this);

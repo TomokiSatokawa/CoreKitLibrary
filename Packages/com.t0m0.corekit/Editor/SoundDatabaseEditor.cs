@@ -1,4 +1,5 @@
 //AI
+using CoreKit.Sound;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -6,25 +7,18 @@ using UnityEngine;
 namespace CoreKit.Editor
 {
     /// <summary>
-    /// SoundDatabaseのInspectorを拡張し、ClipDataとRandomClipDataをReorderableListで表示する
+    /// SoundDatabaseのInspectorを拡張し、ClipData(SerializeReference)をReorderableListで表示する
     /// </summary>
     [CustomEditor(typeof(SoundDatabase))]
     public class SoundDatabaseEditor : UnityEditor.Editor
     {
-        private const int ElementLineCount = 3;
-
         private SerializedProperty _clipDatas;
-        private SerializedProperty _randomClipDatas;
         private ReorderableList _clipList;
-        private ReorderableList _randomClipList;
 
         private void OnEnable()
         {
             _clipDatas = serializedObject.FindProperty("_clipDatas");
-            _randomClipDatas = serializedObject.FindProperty("_randomClipData");
-
-            _clipList = CreateList(_clipDatas, "_clip");
-            _randomClipList = CreateList(_randomClipDatas, "_audioResource");
+            _clipList = CreateList(_clipDatas);
         }
 
         public override void OnInspectorGUI()
@@ -32,18 +26,16 @@ namespace CoreKit.Editor
             serializedObject.Update();
 
             _clipList.DoLayoutList();
-            EditorGUILayout.Space();
-            _randomClipList.DoLayoutList();
 
             serializedObject.ApplyModifiedProperties();
         }
 
         /// <summary>
-        /// Type / 音源 / Volume の3行を表示するリストを作成する
+        /// SerializeReference配列用のReorderableListを作成する。
+        /// 要素の描画はPropertyFieldに任せ、型選択UIとサブクラスのフィールドを自動表示する
         /// </summary>
         /// <param name="property">配列のSerializedProperty</param>
-        /// <param name="sourcePropertyName">2行目に表示する音源プロパティ名</param>
-        private ReorderableList CreateList(SerializedProperty property, string sourcePropertyName)
+        private ReorderableList CreateList(SerializedProperty property)
         {
             var list = new ReorderableList(serializedObject, property, true, true, true, true);
 
@@ -52,39 +44,32 @@ namespace CoreKit.Editor
                 EditorGUI.LabelField(rect, property.displayName);
             };
 
+            // 要素の中身(サブクラスごとに異なる)に応じて高さを変える
             list.elementHeightCallback = index =>
             {
-                return EditorGUIUtility.singleLineHeight * ElementLineCount
-                       + EditorGUIUtility.standardVerticalSpacing * (ElementLineCount + 1);
+                SerializedProperty element = property.GetArrayElementAtIndex(index);
+                return EditorGUI.GetPropertyHeight(element, true)
+                       + EditorGUIUtility.standardVerticalSpacing * 2;
             };
 
             list.drawElementCallback = (rect, index, active, focused) =>
             {
                 SerializedProperty element = property.GetArrayElementAtIndex(index);
 
-                rect.y += 2;
+                rect.y += EditorGUIUtility.standardVerticalSpacing;
+                rect.height = EditorGUI.GetPropertyHeight(element, true);
 
-                float height = EditorGUIUtility.singleLineHeight;
-                float spacing = EditorGUIUtility.standardVerticalSpacing;
+                // SubclassSelectorのドロワーが型選択と子プロパティを描画する
+                EditorGUI.PropertyField(rect, element, true);
+            };
 
-                EditorGUI.PropertyField(
-                    new Rect(rect.x, rect.y, rect.width, height),
-                    element.FindPropertyRelative("_type")
-                );
-
-                rect.y += height + spacing;
-
-                EditorGUI.PropertyField(
-                    new Rect(rect.x, rect.y, rect.width, height),
-                    element.FindPropertyRelative(sourcePropertyName)
-                );
-
-                rect.y += height + spacing;
-
-                EditorGUI.PropertyField(
-                    new Rect(rect.x, rect.y, rect.width, height),
-                    element.FindPropertyRelative("_volume")
-                );
+            // SerializeReferenceは追加時に直前の要素と参照が共有されてしまうため、nullにリセットする
+            list.onAddCallback = l =>
+            {
+                int index = property.arraySize;
+                property.arraySize++;
+                property.GetArrayElementAtIndex(index).managedReferenceValue = null;
+                l.index = index;
             };
 
             return list;

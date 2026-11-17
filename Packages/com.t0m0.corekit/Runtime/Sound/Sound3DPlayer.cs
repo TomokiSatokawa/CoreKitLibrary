@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Pool;
 
-namespace CoreKit
+namespace CoreKit.Sound
 {
     /// <summary>
     /// 3D空間上の位置でSEを再生する責務を持つ。AudioSourceはプールして再利用する。
@@ -67,7 +67,8 @@ namespace CoreKit
             }
 
             var clipData = instance._database.GetClipData(type);
-            instance.PlayInternal(clipData.Clip, position, clipData.Volume, parent);
+            clipData.GetClip(out var clip, out var volume);
+            instance.PlayInternal(clip, position, volume, parent);
         }
 
         public static void Play3D(AudioClip clip, Vector3 position, float volume = 1f, Transform parent = null)

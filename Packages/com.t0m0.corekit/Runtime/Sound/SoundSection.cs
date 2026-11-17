@@ -1,7 +1,7 @@
 using CoreKit.DynamicEnum;
 using UnityEngine;
 
-namespace CoreKit
+namespace CoreKit.Sound
 {
     public interface IReadOnlySoundSection
     {
@@ -9,7 +9,6 @@ namespace CoreKit
         public void Play(AudioClip clip, float volume);
         public void PlayOneShot(DynamicEnumValue type);
         public void PlayOneShot(AudioClip clip, float volume);
-        public void PlayRandomClip(DynamicEnumValue type);
         public void ChangeVolume(float volume, float duration);
     }
 
@@ -30,7 +29,9 @@ namespace CoreKit
         public void Play(DynamicEnumValue type)
         {
             var clipData = _database.GetClipData(type);
-            Play(clipData.Clip, clipData.Volume);
+
+            clipData.GetClip(out var clip, out var volume);
+            Play(clip, volume);
         }
 
         public void Play(AudioClip clip, float volume)
@@ -44,22 +45,14 @@ namespace CoreKit
         public void PlayOneShot(DynamicEnumValue type)
         {
             var clipData = _database.GetClipData(type);
-            PlayOneShot(clipData.Clip, clipData.Volume);
+
+            clipData.GetClip(out var clip, out var volume);
+            PlayOneShot(clip, volume);
         }
 
         public void PlayOneShot(AudioClip clip, float volume)
         {
             _audioScore.PlayOneShot(clip, volume);
-        }
-
-        public void PlayRandomClip(DynamicEnumValue type)
-        {
-            var clipData = _database.GetRandomClipData(type);
-
-            _audioScore.resource = clipData.AudioResource;
-            _audioScore.volume = clipData.Volume;
-
-            _audioScore.Play();
         }
 
         public void ChangeVolume(float volume, float duration)
