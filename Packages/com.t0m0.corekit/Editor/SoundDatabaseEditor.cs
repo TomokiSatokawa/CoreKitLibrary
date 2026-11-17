@@ -1,43 +1,66 @@
+//AI
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
 namespace CoreKit.Editor
 {
+    /// <summary>
+    /// SoundDatabaseのInspectorを拡張し、ClipDataとRandomClipDataをReorderableListで表示する
+    /// </summary>
     [CustomEditor(typeof(SoundDatabase))]
     public class SoundDatabaseEditor : UnityEditor.Editor
     {
+        private const int ElementLineCount = 3;
+
         private SerializedProperty _clipDatas;
-        private ReorderableList _list;
+        private SerializedProperty _randomClipDatas;
+        private ReorderableList _clipList;
+        private ReorderableList _randomClipList;
 
         private void OnEnable()
         {
             _clipDatas = serializedObject.FindProperty("_clipDatas");
+            _randomClipDatas = serializedObject.FindProperty("_randomClipData");
 
-            _list = new ReorderableList(
-                serializedObject,
-                _clipDatas,
-                true,
-                true,
-                true,
-                true
-            );
+            _clipList = CreateList(_clipDatas, "_clip");
+            _randomClipList = CreateList(_randomClipDatas, "_audioResource");
+        }
 
-            _list.drawHeaderCallback = rect =>
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
+
+            _clipList.DoLayoutList();
+            EditorGUILayout.Space();
+            _randomClipList.DoLayoutList();
+
+            serializedObject.ApplyModifiedProperties();
+        }
+
+        /// <summary>
+        /// Type / 音源 / Volume の3行を表示するリストを作成する
+        /// </summary>
+        /// <param name="property">配列のSerializedProperty</param>
+        /// <param name="sourcePropertyName">2行目に表示する音源プロパティ名</param>
+        private ReorderableList CreateList(SerializedProperty property, string sourcePropertyName)
+        {
+            var list = new ReorderableList(serializedObject, property, true, true, true, true);
+
+            list.drawHeaderCallback = rect =>
             {
-                EditorGUI.LabelField(rect, _clipDatas.displayName);
+                EditorGUI.LabelField(rect, property.displayName);
             };
 
-            _list.elementHeightCallback = index =>
+            list.elementHeightCallback = index =>
             {
-                return EditorGUIUtility.singleLineHeight * 3
-                       + EditorGUIUtility.standardVerticalSpacing * 4;
+                return EditorGUIUtility.singleLineHeight * ElementLineCount
+                       + EditorGUIUtility.standardVerticalSpacing * (ElementLineCount + 1);
             };
 
-            _list.drawElementCallback = (rect, index, active, focused) =>
+            list.drawElementCallback = (rect, index, active, focused) =>
             {
-                SerializedProperty element =
-                    _clipDatas.GetArrayElementAtIndex(index);
+                SerializedProperty element = property.GetArrayElementAtIndex(index);
 
                 rect.y += 2;
 
@@ -53,7 +76,7 @@ namespace CoreKit.Editor
 
                 EditorGUI.PropertyField(
                     new Rect(rect.x, rect.y, rect.width, height),
-                    element.FindPropertyRelative("_clip")
+                    element.FindPropertyRelative(sourcePropertyName)
                 );
 
                 rect.y += height + spacing;
@@ -63,15 +86,8 @@ namespace CoreKit.Editor
                     element.FindPropertyRelative("_volume")
                 );
             };
-        }
 
-        public override void OnInspectorGUI()
-        {
-            serializedObject.Update();
-
-            _list.DoLayoutList();
-
-            serializedObject.ApplyModifiedProperties();
+            return list;
         }
     }
 }
