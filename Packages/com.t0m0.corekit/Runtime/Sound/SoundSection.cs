@@ -9,6 +9,7 @@ namespace CoreKit
         public void Play(AudioClip clip, float volume);
         public void PlayOneShot(DynamicEnumValue type);
         public void PlayOneShot(AudioClip clip, float volume);
+        public void PlayRandomClip(DynamicEnumValue type);
         public void ChangeVolume(float volume, float duration);
     }
 
@@ -49,6 +50,16 @@ namespace CoreKit
         public void PlayOneShot(AudioClip clip, float volume)
         {
             _audioScore.PlayOneShot(clip, volume);
+        }
+
+        public void PlayRandomClip(DynamicEnumValue type)
+        {
+            var clipData = _database.GetRandomClipData(type);
+
+            _audioScore.resource = clipData.AudioResource;
+            _audioScore.volume = clipData.Volume;
+
+            _audioScore.Play();
         }
 
         public void ChangeVolume(float volume, float duration)

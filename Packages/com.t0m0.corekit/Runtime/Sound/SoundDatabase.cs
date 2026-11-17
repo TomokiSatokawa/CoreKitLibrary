@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using CoreKit.DynamicEnum;
 using UnityEngine;
+using UnityEngine.Audio;
 
 namespace CoreKit
 {
@@ -11,8 +12,10 @@ namespace CoreKit
     public class SoundDatabase : ScriptableObject
     {
         [SerializeField] private ClipData[] _clipDatas;
+        [SerializeField] private RandomClipData[] _randomClipData;
 
         private Dictionary<DynamicEnumValue, ClipData> _clipDataDictionary;
+        private Dictionary<DynamicEnumValue, RandomClipData> _randomCipDataDictionary;
 
         [System.Serializable]
         public class ClipData
@@ -23,6 +26,18 @@ namespace CoreKit
 
             public DynamicEnumValue Type => _type;
             public AudioClip Clip => _clip;
+            public float Volume => _volume;
+        }
+
+        [System.Serializable]
+        public class RandomClipData
+        {
+            [SerializeField] private DynamicEnumValue _type;
+            [SerializeField] private AudioResource _audioResource;
+            [SerializeField, Range(0f, 1f)] private float _volume;
+
+            public DynamicEnumValue Type => _type;
+            public AudioResource AudioResource => _audioResource;
             public float Volume => _volume;
         }
 
@@ -42,11 +57,30 @@ namespace CoreKit
                     Debug.LogError($"SoundType‚ªd•¡‚µ‚Ä‚¢‚Ü‚·: {clipData.Type}", this);
                 }
             }
+
+            _randomCipDataDictionary = new Dictionary<DynamicEnumValue, RandomClipData>(_clipDatas.Length);
+
+            foreach (var clipData in _randomClipData)
+            {
+                if (!_randomCipDataDictionary.TryAdd(clipData.Type, clipData))
+                {
+                    Debug.LogError($"SoundType‚ªd•¡‚µ‚Ä‚¢‚Ü‚·: {clipData.Type}", this);
+                }
+            }
         }
 
         public ClipData GetClipData(DynamicEnumValue type)
         {
             if (_clipDataDictionary.TryGetValue(type, out var clipData))
+                return clipData;
+
+            Debug.LogError($"w’è‚³‚ê‚½SoundType‚ª“o˜^‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB Type: {type}", this);
+            return null;
+        }
+
+        public RandomClipData GetRandomClipData(DynamicEnumValue type)
+        {
+            if (_randomCipDataDictionary.TryGetValue(type, out var clipData))
                 return clipData;
 
             Debug.LogError($"w’è‚³‚ê‚½SoundType‚ª“o˜^‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB Type: {type}", this);
