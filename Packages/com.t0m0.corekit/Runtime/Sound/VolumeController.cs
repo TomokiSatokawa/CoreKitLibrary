@@ -4,7 +4,7 @@ using UnityEngine;
 /// 音量の制御を行う構造体
 /// </summary>
 [System.Serializable]
-public struct VolumeController
+public class VolumeController
 {
     [SerializeField, Range(0f, 1f)]
     private float _volume;
@@ -17,6 +17,11 @@ public struct VolumeController
     public float Volume => _volume;
 
     public bool IsChanging => _elapsedTime < _duration;
+
+    public VolumeController(float volume = 1f)
+    {
+        Set(volume);
+    }
 
     /// <summary>
     /// 音量変更を開始する

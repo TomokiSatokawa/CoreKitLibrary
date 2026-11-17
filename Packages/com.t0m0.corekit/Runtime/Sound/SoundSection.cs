@@ -19,7 +19,7 @@ namespace CoreKit
         [SerializeField] protected SoundDatabase _database;
         [SerializeField] protected AudioSource _audioScore;
 
-        private VolumeController _volumeController;
+        private VolumeController _volumeController = new VolumeController();
 
         public void Update()
         {
