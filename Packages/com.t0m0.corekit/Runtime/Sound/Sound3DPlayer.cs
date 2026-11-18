@@ -17,6 +17,7 @@ namespace CoreKit.Sound
         [SerializeField] private SoundDatabase _database;
         [SerializeField] private int _defaultCapacity = 16;
         [SerializeField] private int _maxSize = 64;
+        [SerializeField] private Sound3DSetting _defaultSetting;
 
         private ObjectPool<AudioSource> _audioSourcePool;
 
@@ -61,6 +62,11 @@ namespace CoreKit.Sound
 
         public static void Play3D(DynamicEnumValue type, Vector3 position, Transform parent = null)
         {
+            Play3D(type, position, _instance._defaultSetting, parent);
+        }
+
+        public static void Play3D(DynamicEnumValue type, Vector3 position, Sound3DSetting setting, Transform parent = null)
+        {
             if (!TryGetInstance(out var instance))
             {
                 return;
@@ -68,17 +74,22 @@ namespace CoreKit.Sound
 
             var clipData = instance._database.GetClipData(type);
             clipData.GetClip(out var clip, out var volume);
-            instance.PlayInternal(clip, position, volume, parent);
+            instance.PlayInternal(clip, position, volume, setting, parent);
         }
 
         public static void Play3D(AudioClip clip, Vector3 position, float volume = 1f, Transform parent = null)
+        {
+            Play3D(clip, position, _instance._defaultSetting, volume, parent);
+        }
+
+        public static void Play3D(AudioClip clip, Vector3 position, Sound3DSetting setting, float volume = 1f, Transform parent = null)
         {
             if (!TryGetInstance(out var instance))
             {
                 return;
             }
 
-            instance.PlayInternal(clip, position, volume, parent);
+            instance.PlayInternal(clip, position, volume, setting, parent);
         }
 
         private static bool TryGetInstance(out Sound3DPlayer instance)
@@ -93,7 +104,7 @@ namespace CoreKit.Sound
             return false;
         }
 
-        private void PlayInternal(AudioClip clip, Vector3 position, float volume, Transform parent)
+        private void PlayInternal(AudioClip clip, Vector3 position, float volume, Sound3DSetting setting, Transform parent)
         {
             if (clip == null)
             {
@@ -112,6 +123,7 @@ namespace CoreKit.Sound
 
             audioSource.clip = clip;
             audioSource.volume = volume;
+            setting.SetSetting(audioSource);
             audioSource.Play();
 
             ReleaseAfterPlayAsync(audioSource, clip.length).Forget();
@@ -157,6 +169,27 @@ namespace CoreKit.Sound
             {
                 Destroy(audioSource.gameObject);
             }
+        }
+    }
+
+    [System.Serializable]
+    public class Sound3DSetting
+    {
+        [Range(0f, 1f)] public float SpatialBlend = 1f;
+        [Range(0f, 5f)] public float DopplerLevel = 0f;
+        [Range(0f, 360f)] public float Spread = 0f;
+        public AudioRolloffMode RolloffMode = AudioRolloffMode.Linear;
+        [Min(0f)] public float MinDistance = 1f;
+        [Min(0f)] public float MaxDistance = 50f;
+
+        public void SetSetting(AudioSource source)
+        {
+            source.spatialBlend = SpatialBlend;
+            source.dopplerLevel = DopplerLevel;
+            source.spread = Spread;
+            source.rolloffMode = RolloffMode;
+            source.minDistance = MinDistance;
+            source.maxDistance = MaxDistance;
         }
     }
 }

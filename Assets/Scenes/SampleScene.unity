@@ -132,7 +132,7 @@ GameObject:
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 7250588514170254948, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -147,7 +147,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 45f79ff3a3e664c42a29608fbf1cde23, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -156,7 +156,7 @@ AudioSource:
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
-  DopplerLevel: 1
+  DopplerLevel: 5
   MinDistance: 1
   MaxDistance: 500
   Pan2D: 0
@@ -942,7 +942,7 @@ AudioSource:
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
-  DopplerLevel: 1
+  DopplerLevel: 0
   MinDistance: 1
   MaxDistance: 500
   Pan2D: 0
@@ -1030,11 +1030,18 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fac80d4d53a4070499fa6cfb87230820, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: CoreKit::CoreKit.Sound3DPlayer
-  _audioSourcePrefab: {fileID: 34437369}
-  _database: {fileID: 11400000, guid: a29d3b9581a32374eafbe0cf201e0443, type: 2}
+  m_EditorClassIdentifier: CoreKit::CoreKit.Sound.Sound3DPlayer
+  _audioSourcePrefab: {fileID: 0}
+  _database: {fileID: 0}
   _defaultCapacity: 16
   _maxSize: 64
+  _defaultSetting:
+    SpatialBlend: 1
+    DopplerLevel: 0
+    Spread: 0
+    RolloffMode: 1
+    MinDistance: 1
+    MaxDistance: 50
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
