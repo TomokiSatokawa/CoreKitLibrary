@@ -53,3 +53,9 @@ BGMやSEなど、サウンドの種類ごとの再生を管理するクラスで
 UI まわりで汎用的に使える機能をまとめたものです。
 
 - [詳細・使い方を見る →](Documentation/UI/UI.md)
+
+### SceneLoader
+
+Sceneの事前非同期読み込みと、読み込み完了後のScene移動を担当するstaticクラスです。裏で次のSceneを読み込んでおき、好きなタイミングで切り替えられます。
+
+- [詳細・使い方を見る →](Documentation/SceneLoading/SceneLoader.md)
