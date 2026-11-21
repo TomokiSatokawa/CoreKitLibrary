@@ -6,6 +6,7 @@
 - 名前空間: `CoreKit.UI.Selector`
 - 種類: 通常の `class<T>`（`MonoBehaviour` ではありません）。`IDisposable` を実装
 - 型制約: `T : ISelectable<T>`
+- 依存: Input System パッケージ（`SelectStates` が `UnityEngine.InputSystem.Utilities.ReadOnlyArray<T>` を使用）
 - 関連: 常に1つだけ選択する [SingleSelectionController.md](SingleSelectionController.md)
 
 ---
@@ -15,7 +16,9 @@
 | メンバー | 種類 | 説明 |
 |---|---|---|
 | `MultiSelectionController(T[] selectables, params int[] startSelectIndex)` | コンストラクタ | 要素の配列と、最初に選択しておく index（複数可）を指定して生成する |
+| `SelectStates` | プロパティ | 各要素の選択状態（`true` なら選択中）を、配列と同じ並びで返す読み取り専用の配列 |
 | `SetSelect(int index, bool setValue)` | メソッド | コードから、index 指定で選択 / 解除を設定する |
+| `GetSelectIndex()` | メソッド | 選択中の要素の index を、昇順のリストで返す |
 | `Dispose()` | メソッド | 各要素の `OnClick` の購読を解除する |
 
 ---
@@ -107,6 +110,31 @@ _controller.SetSelect(1, true);  // index 1 を選択する
 _controller.SetSelect(1, false); // index 1 の選択を解除する
 ```
 
+### 4. 選択状態を取得する
+
+**選択中の index の一覧を取得する（`GetSelectIndex`）**
+
+```csharp
+foreach (var index in _controller.GetSelectIndex())
+{
+    FilterButton selected = _filters[index];
+    // 選択中の要素に対する処理
+}
+```
+
+`GetSelectIndex()` が返す index は、コントローラーに渡した配列（`_filters`）の index と同じです。
+
+**特定の要素が選択中か確認する（`SelectStates`）**
+
+```csharp
+if (_controller.SelectStates[2])
+{
+    // index 2 が選択中
+}
+```
+
+`SelectStates` は、要素ごとの選択状態を、配列と同じ並びで持っています。配列のコピーではなく、コントローラーが持つ状態をそのまま参照する読み取り専用の配列なので、クリックなどで選択が変わると、取得済みの `SelectStates` にも反映されます。
+
 ---
 
 ## 動作
@@ -129,8 +157,12 @@ _controller.SetSelect(1, false); // index 1 の選択を解除する
 
 - **`Dispose` を呼んでください。**
   コンストラクタで各要素の `OnClick` を購読しているため、`Dispose` を呼ばないと、購読が残ります。
-- **選択状態を取得するメンバーは、ありません。**
-  どの要素が選択中かは、コントローラーの内部（`private`）にしか保持されていません。「現在の選択を一覧で取得したい」「選択数を知りたい」「選択が変わったときに通知を受けたい」場合は、プロパティやイベントを追加してください。
+- **`GetSelectIndex()` は、呼ぶたびに新しいリストを作ります。**
+  毎フレーム呼ぶとガベージが発生します。毎フレーム確認したい場合は、`SelectStates` を直接参照してください。
+- **`SelectStates` は、Input System パッケージの型を使っています。**
+  戻り値の型が `UnityEngine.InputSystem.Utilities.ReadOnlyArray<bool>` のため、Input System パッケージが導入されていないプロジェクトでは、コンパイルできません。
+- **選択が変わったことを通知するイベントは、ありません。**
+  選択の変化は、各要素の `OnSelect()` / `OnDeselect()` で受け取るか、コントローラーにイベントを追加してください。
 - **選択数の制限は、ありません。**
   「最大2つまで」「最低1つは必須」といった制限が必要な場合は、コントローラー側の拡張が必要です。
 - **同じ要素を、配列に2回含めないでください。**

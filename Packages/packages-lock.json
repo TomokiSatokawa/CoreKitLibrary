@@ -7,6 +7,13 @@
       "dependencies": {},
       "hash": "a77a1b4a89824fb6df293099de3060daf2a432c1"
     },
+    "com.mackysoft.serializereference-extensions": {
+      "version": "https://github.com/mackysoft/Unity-SerializeReferenceExtensions.git?path=Assets/MackySoft/MackySoft.SerializeReferenceExtensions",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "cfefa0d9cba48a04ef65bea1bd2604c991a780c2"
+    },
     "com.t0m0.corekit": {
       "version": "file:com.t0m0.corekit",
       "depth": 0,

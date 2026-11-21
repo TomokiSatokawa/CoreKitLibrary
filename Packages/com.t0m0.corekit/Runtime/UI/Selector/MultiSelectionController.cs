@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.Utilities;
 
 namespace CoreKit.UI.Selector
 {
@@ -13,7 +14,9 @@ namespace CoreKit.UI.Selector
         private readonly bool[] _selectStates;
         private readonly Dictionary<T, int> _indexMap;
 
-        public MultiSelectionController(T[] selectables,params int[] startSelectIndex)
+        public ReadOnlyArray<bool> SelectStates => _selectStates;
+
+        public MultiSelectionController(T[] selectables, params int[] startSelectIndex)
         {
             _selectableArray = selectables;
             _selectStates = new bool[selectables.Length];
@@ -49,6 +52,19 @@ namespace CoreKit.UI.Selector
             }
 
             ApplySelect(index, setValue);
+        }
+
+        public IReadOnlyList<int> GetSelectIndex()
+        {
+            var selectIndex = new List<int>();
+
+            for (int i = 0; i < _selectStates.Length; i++)
+            {
+                if (_selectStates[i])
+                    selectIndex.Add(i);
+            }
+
+            return selectIndex;
         }
 
         private bool IsValidIndex(int index)

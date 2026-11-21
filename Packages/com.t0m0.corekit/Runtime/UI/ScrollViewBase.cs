@@ -9,7 +9,12 @@ namespace CoreKit.UI
     {
         [SerializeField] private RectTransform _content;
 
-        private void Awake()
+        /// <summary>
+        /// ContentÇÃêeTransform
+        /// </summary>
+        protected RectTransform Content => _content;
+
+        protected virtual void Awake()
         {
             if (_content == null)
             {
