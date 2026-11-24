@@ -104,7 +104,7 @@ namespace CoreKit.ObjectPool
         {
             for (var i = 0; i < list.Count; i++)
             {
-                if (!list[i].IsActive)
+                if (list[i] != null && !list[i].IsActive)
                     return list[i];
             }
 
